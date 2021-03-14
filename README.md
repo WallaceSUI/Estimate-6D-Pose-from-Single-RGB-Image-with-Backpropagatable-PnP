@@ -86,7 +86,7 @@ where f(x, y, z, K) = [f1, . . . , fm]T is the constructed constraint function f
 
 ![equation12](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation12.png)
 
-## Comprehensive Loss Function
+### Comprehensive Loss Function
 Having the above illustration, we built the comprehen- sive loss function Lnn:
 
 ![equation13](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation13.png)
