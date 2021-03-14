@@ -17,3 +17,5 @@ In the first stage of the pipeline, an independent Mask- RCNN is employed for 2-
 
 ### 3-D Coordinate Prediction
 The architecture of the our network is described in Fig.3. We use a Unet with skip connection network architecture to make a pixel-to-pixel prediction of 3-D coor- dinates in object coordinate system.
+
+![equation1](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation1.png)
