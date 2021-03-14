@@ -92,3 +92,6 @@ Having the above illustration, we built the comprehen- sive loss function Lnn:
 ![equation13](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation13.png)
 
 where α1,α2 are the weights of these two loss functions. The whole network will use Lnn as a final loss and back- propagate the gradiants to update parameters.
+
+### Results
+Our method achieves BOP score at 61.4 on YCB-V using only RGB images, which is 10.6 higher than original Pix2Pose’s performance.
