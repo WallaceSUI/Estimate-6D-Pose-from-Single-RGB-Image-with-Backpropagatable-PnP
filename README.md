@@ -93,5 +93,5 @@ Having the above illustration, we built the comprehen- sive loss function Lnn:
 
 where α1,α2 are the weights of these two loss functions. The whole network will use Lnn as a final loss and back- propagate the gradiants to update parameters.
 
-### Results
+## Results
 Our method achieves BOP score at 61.4 on YCB-V using only RGB images, which is 10.6 higher than original Pix2Pose’s performance.
