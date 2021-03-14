@@ -32,7 +32,7 @@ sys.path.append("./bop_toolkit")
 def dummy_loss(y_true,y_pred):
     return y_pred
 
-##1: 这个func是：若输入是fake-img，则使用Generator进行生成，并声成其对应的label0；若输入是real-image，则直接生成label1即可
+##1
 def get_disc_batch(X_src, X_tgt, generator_model, batch_counter,label_smoothing=False,label_flipping=0):    
     if batch_counter % 2 == 0:
         ##generator_model.weights.double()
@@ -72,7 +72,7 @@ dataset=sys.argv[3]
 cfg_fn = sys.argv[2] #"cfg/cfg_bop2019.json"
 cfg = inout.load_json(cfg_fn)
 
-##2： 这里是配备一堆路径
+##2
 bop_dir,source_dir,model_plys,model_info,model_ids,rgb_files,depth_files,mask_files,gts,cam_param_global,scene_cam = bop_io.get_dataset(cfg,dataset,incl_param=True)
 im_width,im_height =cam_param_global['im_size'] 
 weight_prefix = "pix2pose" 
@@ -106,7 +106,7 @@ if('symmetries_continuous' in keys):
 #optimizer_dcgan =Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 #optimizer_disc = Adam(lr=1E-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 
-##3: 这里是加载model
+##3
 backbone='paper'
 if('backbone' in cfg.keys()):
     if(cfg['backbone']=="resnet50"):
@@ -122,7 +122,7 @@ discriminator = torch_models.discriminator().double().cuda()
 epoch=0
 recent_epoch=-1
 
-##4： 这里是加载记录的中间model，这里不知道怎么写成torch版本？？？
+##4
 #if load_recent_weight:
 #    weight_save_gen=""
 #    weight_save_disc=""
@@ -151,7 +151,7 @@ recent_epoch=-1
 #        discriminator.load_state_dict(os.path.join(weight_dir,weight_save_disc))
 #        ##discriminator.load_weights(os.path.join(weight_dir,weight_save_disc))
    
-##5： lr会发生修改
+##5
 if(recent_epoch!=-1):
     epoch = recent_epoch
     train_gen_first=False
@@ -167,7 +167,7 @@ elif(max_epoch==20): #lr-shcedule used in the paper
                 1E-4,1E-4,1E-4,1E-4,1E-4,
                 1E-4,1E-4,1E-4,1E-4,1E-5]
 
-##6： 这里是定义基本参数
+##6
 criterion = nn.BCELoss().to(device)
 #optimizer_G = optim.Adam(generator_train.parameters(), lr=1E-4, betas=(0.9, 0.999), eps=1e-08)
 #optimizer_D = optim.Adam(discriminator.parameters(), lr=1E-4, betas=(0.9, 0.999), eps=1e-08)
@@ -190,14 +190,14 @@ print(feed_iter)
 optimizer_G = optim.Adam(generator_train.parameters(), lr=lr_current, betas=(0.9, 0.999), eps=1e-08)
 optimizer_D = optim.Adam(discriminator.parameters(), lr=lr_current, betas=(0.9, 0.999), eps=1e-08)
 
-##7： 这是一个tensorflow的加载器，不知道怎么改成torch版本？？？？？
+##7
 fed = GeneratorEnqueuer(feed_iter,use_multiprocessing=False, wait_time=5) #####1: ?????
 fed.start(workers=1,max_queue_size=200)
 iter_ = fed.get()
 
 zero_target = torch.zeros((batch_size))
 
-##8： 开始按照batch进行训练
+##8
 for X_src,X_tgt,disc_tgt,prob_gt in iter_:
     optimizer_D.zero_grad()
     #1: change data to torch.tensor
@@ -238,7 +238,7 @@ for X_src,X_tgt,disc_tgt,prob_gt in iter_:
     recont_losses.append(recont_l)
     gen_losses.append(dcgan_loss)
 
-    ##11： 这里不知道怎么进行记录的修改？？？
+    ##11
     #mean_loss = np.mean(np.array(recont_losses))
     ##print("Epoch{:02d}-Iter{:03d}/{:03d}:Mean-[{:.5f}], Disc-[{:.4f}], Recon-[{:.4f}], Gen-[{:.4f}]],lr={:.6f}".format(epoch,batch_counter,int(n_batch_per_epoch),mean_loss,disc_loss.detach().numpy(),recont_l.detach().numpy(),dcgan_loss.detach().numpy(),lr_current))
     print("running")
@@ -251,7 +251,7 @@ for X_src,X_tgt,disc_tgt,prob_gt in iter_:
         epoch+=1
         print('disc_loss:',disc_loss)
         print('dcgan_loss:',dcgan_loss)
-        ##12： 这里不知道怎么正确保存数据？？？
+        ##12
         #if( mean_loss< pre_loss):
         #    print("loss improved from {:.4f} to {:.4f} saved weights".format(pre_loss,mean_loss))
         #    print(weight_dir+"/"+weight_prefix+".{:02d}-{:.4f}.hdf5".format(epoch,mean_loss))
@@ -284,7 +284,7 @@ for X_src,X_tgt,disc_tgt,prob_gt in iter_:
         optimizer_D = optim.Adam(discriminator.parameters(), lr=lr_current, betas=(0.9, 0.999), eps=1e-08)
 
     batch_counter+=1
-    ##13： 这里不知道该怎么保存文件才对？？？
+    ##
     #if(epoch>max_epoch):
     #    print("Train finished")
     #    if(backbone=='paper'):
