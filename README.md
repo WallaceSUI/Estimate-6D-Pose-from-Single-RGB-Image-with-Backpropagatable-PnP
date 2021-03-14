@@ -16,9 +16,7 @@ This section provides a detailed description of our net- work architecture and l
 
 ![figure2](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure2.png)
 
-![figure3](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure3.png)
-
-![figure3](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure4.png)
+![figure3-4](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure3-4.png)
 
 ### Object Detection
 In the first stage of the pipeline, an independent Mask- RCNN is employed for 2-D object detection and in- stance segmentation. This stage takes the whole RGB image as input and will provide classes, 2-D bounding boxes and instance masks for detected objects. RGB images as well as masks of these detected objects will then be cropped according to enlarged 2-D bounding boxes in order to deal with possible occlusions. These cropped images will then be processed by lateral Unet.
