@@ -18,6 +18,8 @@ This section provides a detailed description of our net- work architecture and l
 
 ![figure3](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure3.png)
 
+![figure3](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/figure4.png)
+
 ### Object Detection
 In the first stage of the pipeline, an independent Mask- RCNN is employed for 2-D object detection and in- stance segmentation. This stage takes the whole RGB image as input and will provide classes, 2-D bounding boxes and instance masks for detected objects. RGB images as well as masks of these detected objects will then be cropped according to enlarged 2-D bounding boxes in order to deal with possible occlusions. These cropped images will then be processed by lateral Unet.
 
@@ -25,3 +27,9 @@ In the first stage of the pipeline, an independent Mask- RCNN is employed for 2-
 The architecture of the our network is described in Fig.3. We use a Unet with skip connection network architecture to make a pixel-to-pixel prediction of 3-D coor- dinates in object coordinate system.
 
 ![equation1](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation1.png)
+
+The input of the network is cropped images from the re- sults of Mask-RCNN, Iinput. The outputs of the network are normalized 3-D coordinates of each pixel in the object coordinate system, I3D, and the error level map of pixels, Ie. The ground truth Igt is a map with same size as input image Iinput and three channels. These three channels de- note the x, y, z coordinate of each pixel of Iinput in object coordinate system. A sample pair of Iinput and Igt is shown in Fig.4. Since Igt can also be seen as a image, we can gen- erate Igt by rendering 3-D model of a object with its 3-D coordinate encoded as vertex colors with same pose as its ground truth.
+
+The target of training is to predict the target coordinate image from an input image. To evaluate the performance of the prediction, a comprehension loss function is intro- duced. The first part of the loss is called transformer loss, Ltrans, which will be illustrated in this section. The next section will elaborate the another part of loss function, the projection loss, Lproj.
+
+To make the prediction more close to Igt, the average L1 distance of each pixel loss is used. The construction of Lr is defined as:
