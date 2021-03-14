@@ -31,3 +31,57 @@ The input of the network is cropped images from the re- sults of Mask-RCNN, Iinp
 The target of training is to predict the target coordinate image from an input image. To evaluate the performance of the prediction, a comprehension loss function is intro- duced. The first part of the loss is called transformer loss, Ltrans, which will be illustrated in this section. The next section will elaborate the another part of loss function, the projection loss, Lproj.
 
 To make the prediction more close to Igt, the average L1 distance of each pixel loss is used. The construction of Lr is defined as:
+
+![equation2](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation2.png)
+
+In which n is the number of pixels. M is an object mask containing all pixels
+that belong to the object when it is fully observable. This mask makes the loss which has the motivation of predicting the occluded part of object. We give the factor β some value >= 1, meaning that the pixel belongs to the object is more significant than the pixel that does not.
+
+We have talked about the difficulty of handling the sym- metric object. Since such an object can have a huge pixel distance but a very similar pose to a certain pose and will make neural network hard to converge. One solution is to multiple the 3D transform matrix in the symmetric pool to the Igt, so that these 3-D coordinates can be transformed to coordinates in another symmetric pose. Then one of the pose that has the smallest loss error can be chose, deriving L3D as follow:
+
+![equation3](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation3.png)
+
+where Rp is the transforming matrix from the pose of Igt to a symmetric pose p. sym is a pool of all symmetric pose and is a pre-defined parameter for each object.
+
+Another information we want in the output is the error map of each pixel, which estimates the difference between I3D and Igt and is used to refine the output image during inference. Ie should be identical to the Lr with β = 1. Based on that the error prediction loss have the form:
+
+![equation4](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation4.png)
+
+Lr is clipped to the maximum output of sigmoid function. With the above loss function, the transform loss Ltrans can be written as:
+
+![equation5](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation5.png)
+
+where λ1 and λ2 denote weights to balance different tasks.
+
+### Backpropagatable PnP
+In this section, we define the projection loss Lproj to ensure projection with predicted pose can get similar pro- jection results with ground truth pose.
+
+Let g denotes a PnP solver in the form of a mapping
+
+![equation6](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation6.png)
+
+which returns the 6 DoF pose y of a camera with intrinsic matrix K ∈ R3×3 from n 2D-3D correspondences. y can be parametrized as following:
+
+![equation7](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation7.png)
+
+In our work, we use axis-angle representation, i.e. m = 6.
+
+Let π(·|y,K) be a projective transformation of 3-D points onto the image plane with pose y and camera intrin- sics K. The projection loss function Lproj has the form
+
+![equation8](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation8.png)
+
+where y is calculated by Eq.6, z∗ is the 3-D vertex coordi- nates of the object, x∗ is the 2-D image coordinate projected by ground truth pose. We take CNN as a function:
+
+![equation9](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation9.png)
+
+which is parametrized by θ. In order to update the net- work parameters θ, we take the derivative of Lproj w.r.t. θ:
+
+![equation10](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation10.png)
+
+where ∂y/∂z is addressed by using The Implicit Function Theorem. The implicit differentiation of ∂y/∂z follows
+
+![equation11](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation11.png)
+
+where f(x, y, z, K) = [f1, . . . , fm]T is the constructed constraint function for IFT, and fj is defined by for all j ∈ {1,...,m}:
+
+![equation12](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation12.png)
