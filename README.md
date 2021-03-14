@@ -85,3 +85,10 @@ where ∂y/∂z is addressed by using The Implicit Function Theorem. The implici
 where f(x, y, z, K) = [f1, . . . , fm]T is the constructed constraint function for IFT, and fj is defined by for all j ∈ {1,...,m}:
 
 ![equation12](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation12.png)
+
+## Comprehensive Loss Function
+Having the above illustration, we built the comprehen- sive loss function Lnn:
+
+![equation13](https://github.com/WallaceSUI/Estimate-6D-Pose-from-Single-RGB-Image-with-Backpropagatable-PnP/blob/main/figures-equations/equation13.png)
+
+where α1,α2 are the weights of these two loss functions. The whole network will use Lnn as a final loss and back- propagate the gradiants to update parameters.
